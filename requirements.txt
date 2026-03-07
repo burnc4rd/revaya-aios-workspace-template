@@ -1,0 +1,15 @@
+# Business AI OS Workspace — Python dependencies
+# These are for the content pipeline scripts in scripts/content/
+# Install with: pip install -r requirements.txt
+
+python-dotenv>=1.0
+requests>=2.31
+
+# Optional — install separately based on your setup:
+# pip install openai          # If using OpenAI APIs
+# pip install anthropic       # If calling Claude API directly from scripts
+
+# Telegram bot (CommandOS) dependencies — install separately if you build one:
+# pip install aiogram>=3.4
+# pip install weasyprint      # PDF generation
+# pip install matplotlib      # Charts and data visualization
