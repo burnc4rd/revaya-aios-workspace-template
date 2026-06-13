@@ -237,7 +237,7 @@ This workspace runs on a 6-department ACRA+2 structure — 14 agents organized b
 | 3. Knowledge Management | 5-step pipeline (Capture → Ready for Execution) | `knowledge/` |
 | 4. Execution Layer | GTD + plans + ACRA departments | `gtd/`, `plans/`, `team/` |
 | 5. Auto-Capture | `/commit` Step 1.5 + `/reflect` | `.claude/commands/commit.md`, `reflect.md` |
-| 6. Communications Layer | Telegram bot (optional, not included) | Build your own using `apps/` pattern |
+| 6. Communications Layer | Telegram bot (CommandOS) | `apps/command/bot.py`, `main.py` |
 | 7. Metrics and Monitoring | KPI tracking + `/metrics` command | `metrics/` |
 | 8. Learning Loops | 5 cadences (Daily → Annual) | `/reflect` (daily), `/review` (weekly) |
 | 9. External Connectors | APIs, MCPs, webhooks — audited | `connectors.md` |

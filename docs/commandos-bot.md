@@ -17,32 +17,28 @@ Telegram message --> bot.py (aiogram router) --> orchestrator.py --> Claude Code
 
 | File | Purpose |
 |------|---------|
-| `apps/command/bot.py` | Aiogram message handlers, debounce buffer, /capture command |
-| `apps/command/orchestrator.py` | Core engine — routes to CC agent sessions, delivers responses |
-| `apps/command/worker.py` | Claude Code SDK execution (run_general_agent, run_general_prime) |
-| `apps/command/session_manager.py` | Persistent session storage (JSON, survives restarts) |
-| `apps/command/config.py` | Config from .env (ANTHROPIC_API_KEY, GROUP_ID, models, limits) |
+| `apps/command/bot.py` | Aiogram message handlers, command routing, voice transcription hook |
+| `apps/command/agent.py` | Gemini API integration, workspace file loader, command instructions executor |
+| `apps/command/config.py` | Config from .env (GEMINI_API_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_GROUP_ID, OBSIDIAN_VAULT_PATH) |
 | `apps/command/main.py` | Entry point — initializes bot and starts aiogram polling |
-| `data/command/` | Session data, temp photos, logs |
 
 ## How It Works
 
-1. Message arrives in Telegram group → `bot.py` validates (group + owner lock)
-2. Voice notes transcribed via Whisper, photos downloaded as base64
-3. Messages debounced (1.5s) to batch rapid-fire pastes
-4. Routed: agent topic → `handle_agent_topic_message`, everything else → `handle_general_message`
-5. Orchestrator checks for existing session → primes if none → runs CC agent
-6. Response cleaned, segmented, sent back to Telegram
-7. Created files (images, PDFs) sent as Telegram attachments
+1. Message arrives in Telegram group → `bot.py` validates against `TELEGRAM_GROUP_ID` (locks group access for safety).
+2. Voice notes are sent directly to Gemini as raw audio files using Gemini's native multimodal features (no separate OpenAI Whisper billing/setup required).
+3. Commands (/prime, /build_guide, /team, /reflect, /capture) are mapped to their `.claude/commands/[command].md` files.
+4. `agent.py` loads the command instructions, reads referenced workspace files, appends context, and calls the Gemini API.
+5. If Gemini requests file writes (e.g. creating reflect files or project plans), the bot intercepts the custom formatting tags and writes them to the workspace.
+6. Build moments captured during `/reflect` are written directly to the content SQLite database and `pipeline.md` is regenerated.
 
 ## Configuration
 
 | Variable | Purpose | Required |
 |----------|---------|----------|
-| `ANTHROPIC_API_KEY` | Claude API access | Yes |
+| `GEMINI_API_KEY` | Gemini API access | Yes |
 | `TELEGRAM_BOT_TOKEN` | Bot authentication | Yes |
 | `TELEGRAM_GROUP_ID` | Authorized group (0 = discovery mode) | Yes (0 to discover) |
-| `OPENAI_API_KEY` | Voice transcription (Whisper) | Optional |
+| `OBSIDIAN_VAULT_PATH` | Path to your Obsidian vault | Optional (for build-guide) |
 
 **Discovery mode:** Set `TELEGRAM_GROUP_ID=0` to have the bot log and reply with the actual chat ID when it receives any message. Useful for first-time setup.
 
@@ -94,8 +90,8 @@ Sessions are routed by `session.name`: `"✍️ Content Strategist"` → content
 
 ## Dependencies
 
-- **Depends on:** ANTHROPIC_API_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_GROUP_ID, aiogram, Claude Code CLI
-- **Python:** 3.13+ required (f-string backslash syntax in logger.py)
+- **Depends on:** `GEMINI_API_KEY`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_GROUP_ID`, `aiogram`, `google-generativeai`
+- **Python:** 3.10+ required
 - **Used by:** GTD `/capture` command, all Telegram-based workflows
 
 ## History

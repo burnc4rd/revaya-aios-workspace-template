@@ -9,7 +9,8 @@ requests>=2.31
 # pip install openai          # If using OpenAI APIs
 # pip install anthropic       # If calling Claude API directly from scripts
 
-# Telegram bot (CommandOS) dependencies — install separately if you build one:
-# pip install aiogram>=3.4
+# Telegram bot (CommandOS) dependencies:
+aiogram>=3.4
+google-generativeai>=0.8
 # pip install weasyprint      # PDF generation
 # pip install matplotlib      # Charts and data visualization

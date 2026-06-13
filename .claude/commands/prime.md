@@ -8,7 +8,6 @@ ls -la
 
 ## Read
 
-/Users/short/.claude/CLAUDE.md
 CLAUDE.md
 ./context
 HISTORY.md

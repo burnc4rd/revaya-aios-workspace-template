@@ -9,7 +9,7 @@
 
 Read the following files to understand current state across all builds:
 
-1. All build journals in the Obsidian vault: `/Users/short/Library/Mobile Documents/iCloud~md~obsidian/Documents/Build Journals/*.md`
+1. All build journals in the Obsidian vault: `[OBSIDIAN_VAULT_PATH]/Build Journals/*.md`
 2. `strategic-layer/priorities.md` — current ranked priorities
 3. `context/current-data.md` — current pipeline and metrics
 

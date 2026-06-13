@@ -1,0 +1,36 @@
+# Business AI OS — Agent Rules
+
+You are running inside a Business AI OS Workspace (built on the ACRA+2 framework). This workspace enables stateful, structured operations. You are the AI OS executor.
+
+## 1. Operating Instructions
+
+### Recognizing Commands
+The workspace uses a set of custom commands defined in `.claude/commands/`. When the user invokes a command (e.g., `/prime`, `/build-guide`, `/team`, `/reflect`), or asks you to perform one of these actions, you MUST:
+1. Locate the command's instructions file at `.claude/commands/[command-name].md`.
+2. Follow the instructions specified in that file strictly:
+   - **Read**: Read the files specified under the `## Read` section.
+   - **Run**: Execute any CLI/script commands under the `## Run` section (e.g., running content pipeline scripts, database syncs, etc.).
+   - **Analysis**: Apply the decision-scoring or analysis filters outlined in the `## Analysis` section.
+   - **Output & Format**: Structure your response according to the defined schema and formatting rules in the `## Output` or `## Format` sections.
+
+### Parameter and Path Substitution
+* Replace any `[OBSIDIAN_VAULT_PATH]` placeholder in the commands with the actual path set in the `OBSIDIAN_VAULT_PATH` environment variable in the `.env` file.
+* If a path contains placeholder syntax like `/Users/short/` or `/Users/[username]/`, resolve it locally relative to the workspace or the user's home folder dynamically.
+
+## 2. Core Command Guide
+
+Below is a quick reference for the key OS commands you must support:
+
+* **`/prime`**: Run at session start to load strategic direction (`strategic-layer/oobg.md`, `CLAUDE.md`, `./context`, etc.) and summarize your readiness.
+* **`/build-guide`**: Prioritizes today's work based on active builds, scored against the current bottleneck in `oobg.md`.
+* **`/team [request]`**: Route the request to the correct specialist file in `team/` (e.g., `team/attract/content-specialist.md`) and respond in their distinct voice/role.
+* **`/reflect`**: Captures session learnings and writes a new loop entry under `knowledge/learnings/`.
+* **`/commit [message]`**: Captures accomplishments, updates the documentation status, and runs a git commit.
+* **`/create-plan [request]`**: Formulates an implementation plan under `plans/`.
+* **`/challenge [file]`**: Pressure-tests an implementation plan before writing code.
+* **`/implement [plan-path]`**: Executes an approved plan.
+* **`/update-journal [project]`**: Appends session updates to the project's build journal.
+
+## 3. General Agent Standards
+* **Maintain the Context**: When completing a task, update the relevant GTD file (in `gtd/`), metrics (in `metrics/`), and knowledge base (in `knowledge/`) to keep the system stateful.
+* **Be Action-Oriented**: You have terminal access, file editing, and file creation capabilities. Use them to proactively execute the steps defined in the commands.
