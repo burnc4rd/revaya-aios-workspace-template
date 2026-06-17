@@ -1,7 +1,7 @@
 # OOBG — One Objective, One Bottleneck, One Goal
 
 > The core filter for the entire AI OS. Every task is scored against this. Updated monthly.
-> **Last updated:** [YYYY-MM-DD]
+> **Last updated:** [2026-05-03]
 
 ---
 
